@@ -52,31 +52,19 @@ def reinit_layers_if_needed(network,
                 if k in old:
                     result[k] = recursively_merge(old[k], new[k], current_path)
                 else:
-                    print(f"Key {k} not in old params, using new")
                     result[k] = new[k]
             return result
         else:
-            # Handle leaf nodes (actual parameter arrays)
             param_name = ".".join(path)
-            print(f"Processing parameter: {param_name}")
-            print(f"  Old shape: {old.shape if hasattr(old, 'shape') else 'No shape'}")
-            print(f"  New shape: {new.shape if hasattr(new, 'shape') else 'No shape'}")
             
             if param_name in force_reinit_names:
-                print(f"  -> Force reinit: using new")
                 return new
             elif hasattr(old, 'shape') and hasattr(new, 'shape') and old.shape == new.shape:
-                print(f"  -> Shapes match: using old")
                 return old
             else:
-                print(f"  -> Shapes don't match: using new")
                 return new
 
     merged_params = recursively_merge(old_params, new_params)
-    
-    print("Merged params structure:")
-    print(jax.tree_util.tree_map(lambda x: x.shape, merged_params))
-    
     return freeze(merged_params), freeze(new_vars.get("batch_stats", {}))
 
 class CNN(nn.Module):
