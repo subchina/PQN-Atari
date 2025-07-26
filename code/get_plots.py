@@ -36,5 +36,4 @@ def plot_from_logged_returns(csv_path):
     plt.tight_layout()
     plt.show()
 
-# Example usage:
 plot_from_logged_returns("wandb_export_2025-07-26T03_35_48.526+02_00 sit.csv")
